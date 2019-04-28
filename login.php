@@ -68,32 +68,20 @@ if (isset($_POST['username'], $_POST['password']) ) {
 			       	$_SESSION['role'] = 'asst_reg';
 			       }
 			       else {
-			       	$sql = "SELECT id FROM crossstaff WHERE staffID = "."'".$_SESSION['staffID']."'";
-			       	$result = $con->query($sql);
-			       	if ($result->num_rows > 0) {
-			       		$row = $result->fetch_assoc();
-			       		$id = $row['id'];
-			       		$sql = "SELECT * FROM deansecy WHERE crossstaffID = "."'".$id."'";
-			       		$result = $con->query($sql);
-			       		if ($result->num_rows > 0) {
-			       			$_SESSION['role'] = 'deansecy';
-			       		}
-			       		else{
-			       			$sql = "SELECT * FROM deptsecy WHERE crossstaffID = "."'".$id."'";
-			       			$result = $con->query($sql);
-			       			if ($result->num_rows > 0) {
-			       				$_SESSION['role'] = 'deptsecy';
-			       			}
-			       		}
+				       	$sql = "SELECT role FROM crossstaff WHERE staffID = "."'".$_SESSION['staffID']."'";
+				    	$result = $con->query($sql);
+				    	if ($result->num_rows > 0) {
+				    		$row = $result->fetch_assoc();
+				    		$_SESSION['role'] = $row['role'];
+				    	}
 			       	}
+			       	header('Location: index.php');
 			       }
-			       header('Location: index.php');
+			       else{
+				   	echo "<h3 style=\"color:red\">ERROR</h3>";
+				   	session_destroy();
+				   }
 			   }
-			   else{
-			   	echo "<h3 style=\"color:red\">ERROR</h3>";
-			   	session_destroy();
-			   }
-			}
 
 		} else {
 			$WrongPass = TRUE;
@@ -125,7 +113,6 @@ if (isset($_POST['username'], $_POST['password']) ) {
 					<i class="fas fa-lock"></i>
 				</label>
 				<input type="password" name="password" placeholder="Password" id="password" required>
-				<h3><a href="signup.php">Signup</a></h3>
 				<?php
 				if ($WrongUser) {
 					echo "<h3 style=\"color:red\">Wrong Username</h3>";
